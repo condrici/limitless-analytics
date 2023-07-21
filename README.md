@@ -1,4 +1,4 @@
-# data-scraper
+# Limitless Analytics
 Basic price scraper idea
 
 ## Project Installation
