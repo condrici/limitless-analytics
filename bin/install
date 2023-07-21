@@ -54,6 +54,11 @@ fi
 SCRIPT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 cd "${SCRIPT_PATH}" && cd ..
 
+# Create path used for the application logs
+
+mkdir -p ./logs
+touch ./logs/application.log
+
 # Prepare virtual environment
 
 python3 -m venv venv # Create virtual environment under folder /venv
