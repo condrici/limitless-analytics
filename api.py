@@ -21,7 +21,7 @@ from modules.SearchAlgorithms import SearchAlgorithmFactory
 
 app = Flask(__name__)
 Swagger(app, template=Utilities.get_json_from_file('documentation/swagger.json'))
-cProfile.run('re.compile("foo|bar")')
+# cProfile.run('re.compile("foo|bar")')
 
 
 @app.errorhandler(404)
@@ -62,7 +62,8 @@ def index(url: str, algorithm: str):
 
 ####################
 # START APPLICATION
+# 0.0.0.0 is an address used to refer to all IP addresses on the same machine
+# this is needed in a docker context
 ####################
 
-
-app.run(debug=True, port=8000, host="localhost")
+app.run(debug=True, port=8000, host="0.0.0.0")
