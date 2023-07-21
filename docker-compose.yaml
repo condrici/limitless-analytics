@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  analytics:
+    tty: true
+    build:
+      context: ./
+      dockerfile: docker/dockerfiles/webserver/Dockerfile
+    container_name: '${COMPOSE_PROJECT_NAME}-${WEBSERVER_NAME}'
+    restart: 'always'
+    entrypoint: /docker-entrypoint.sh
+    volumes:
+      - ./docker/dockerfiles/webserver/docker-entrypoint.sh:/docker-entrypoint.sh
+      - .:/app
+    ports:
+      - "${HOST_MACHINE_UNSECURE_HOST_PORT}:8000"
+    networks:
+      - limitless
+
+
+networks:
+  limitless:
+    driver: bridge
