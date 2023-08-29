@@ -2,6 +2,7 @@ requests
 bs4
 flask
 flask_api
+flask_cors
 flasgger
 marshmallow-jsonapi
 coverage

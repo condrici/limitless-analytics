@@ -9,6 +9,7 @@ import re        # used by cProfile.run
 import flask_api.status
 from flask import Flask, jsonify, render_template
 from flasgger import Swagger
+from flask_cors import CORS
 
 from modules.DataScraper import PriceScraper
 from modules.Schema import PriceSchema
@@ -20,6 +21,8 @@ from modules.SearchAlgorithms import SearchAlgorithmFactory
 ####################
 
 app = Flask(__name__)
+CORS(app)
+
 Swagger(app, template=Utilities.get_json_from_file('documentation/swagger.json'))
 # cProfile.run('re.compile("foo|bar")')
 
