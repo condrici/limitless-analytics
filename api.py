@@ -3,6 +3,7 @@ This is the API entrypoint with all afferent routes
 """
 
 import logging
+import traceback
 import cProfile
 import re        # used by cProfile.run
 
@@ -12,7 +13,7 @@ from flasgger import Swagger
 from flask_cors import CORS
 
 from modules.DataScraper import PriceScraper
-from modules.Schema import PriceSchema
+from modules.Schema import ScrapedPriceSchema, ApiResponseGenerator
 from modules import Utilities
 from modules.SearchAlgorithms import SearchAlgorithmFactory
 
@@ -51,16 +52,24 @@ def index(url: str, algorithm: str):
             scrape_url=url, scrape_algorithm=algorithm
         )
     except BaseException as Ex:
-        message = 'Something went wrong'
-        Utilities.log(message + ' ' + str(Ex), logging.DEBUG)
+        message = str(Ex)
 
-        return jsonify(
-            PriceSchema().dump(PriceSchema())
-        ), flask_api.status.HTTP_500_INTERNAL_SERVER_ERROR
+        Utilities.log(
+            message + str(traceback.format_exc(3)),
+            logging.ERROR
+        )
 
-    return jsonify(
-        price_schema.dump(price_schema)
-    ), flask_api.status.HTTP_200_OK
+        return ApiResponseGenerator().generate(
+            ScrapedPriceSchema(),
+            flask_api.status.HTTP_500_INTERNAL_SERVER_ERROR,
+            message
+        )
+
+    return ApiResponseGenerator().generate(
+        price_schema,
+        flask_api.status.HTTP_200_OK,
+        ''
+    )
 
 
 ####################

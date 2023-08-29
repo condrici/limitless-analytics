@@ -1,7 +1,7 @@
 import re
 from abc import abstractmethod
 
-from modules.Schema import PriceSchema
+from modules.Schema import ScrapedPriceSchema
 
 FORMAT_COMMA_DECIMALS_DOT_THOUSANDS = "comma_decimals_dot_thousands"
 
@@ -14,7 +14,7 @@ class PriceFormat:
         pass
 
     @abstractmethod
-    def get_price(self, price: str) -> PriceSchema | ValueError:
+    def get_price(self, price: str) -> ScrapedPriceSchema | ValueError:
         pass
 
     """ Validation has to be used in the get_price implementation """
@@ -35,10 +35,10 @@ class CommaDecimalsDotThousandsPriceFormat(PriceFormat):
     into a standardized JSON API schema 
     """
 
-    def get_price(self, price_string: str) -> PriceSchema | ValueError:
+    def get_price(self, price_string: str) -> ScrapedPriceSchema | ValueError:
         self._validate(price_string, self.__regex)
 
-        price_schema = PriceSchema()
+        price_schema = ScrapedPriceSchema()
         price_schema.price = price_string
         price_schema.whole_price = price_string.split(',')[0]
 

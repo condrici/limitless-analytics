@@ -3,7 +3,7 @@ It sends an HTTP request, retrieves the HTML data
 and uses an algorithm to extract the price from it
 """
 
-from modules.Schema import PriceSchema
+from modules.Schema import ScrapedPriceSchema
 from modules.SearchAlgorithms import SearchAlgorithmFactory
 
 
@@ -15,7 +15,11 @@ class PriceScraper:
 
     """Initiate scraping and determine which algorithm has to be used"""
 
-    def scrape(self, scrape_url: str, scrape_algorithm: str) -> PriceSchema:
+    def scrape(
+        self,
+        scrape_url: str,
+        scrape_algorithm: str
+    ) -> ScrapedPriceSchema:
         algorithm = self.__search_algorithm_factory.create(scrape_algorithm)
         return algorithm.get_price(scrape_url)
 

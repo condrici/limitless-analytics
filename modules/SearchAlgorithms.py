@@ -7,7 +7,7 @@ from modules.Http import HttpRequest, HttpRequestSettings
 from modules.PriceFormats import (
     PriceFormatFactory, FORMAT_COMMA_DECIMALS_DOT_THOUSANDS
 )
-from modules.Schema import PriceSchema
+from modules.Schema import ScrapedPriceSchema
 
 
 class SearchAlgorithm:
@@ -15,7 +15,7 @@ class SearchAlgorithm:
     ALGORITHM_EMAG_PRODUCT_PAGE = "emag_product_page"
 
     @abstractmethod
-    def get_price(self, uri: str) -> PriceSchema | ValueError:
+    def get_price(self, uri: str) -> ScrapedPriceSchema | ValueError:
         pass
 
 
@@ -41,7 +41,7 @@ class EmagProductPageSearchAlgorithm(SearchAlgorithm):
         self.__html_scraper_factory = html_scraper_factory
         self.__http_request = http_request
 
-    def get_price(self, uri: str) -> PriceSchema | ValueError:
+    def get_price(self, uri: str) -> ScrapedPriceSchema | ValueError:
         raw_html = self.__http_request.get(url=uri)
         html_scraper = self.__html_scraper_factory.create(raw_html.content)
 
