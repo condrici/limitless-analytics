@@ -57,6 +57,19 @@ def index():
             scrape_url=args.get('search_url'),
             scrape_algorithm=args.get('search_algorithm')
         )
+    # TODO: Additional work and testing is needed for the throw/catch here
+    except ValueError as Ex:
+        message = str(Ex)
+        Utilities.log(
+            message + str(traceback.format_exc(3)),
+            logging.ERROR
+        )
+
+        return ApiResponseGenerator().generate(
+            ScrapedPriceSchema(),
+            flask_api.status.HTTP_400_BAD_REQUEST,
+            str(Ex)
+        )
     except BaseException as Ex:
         message = str(Ex)
         http_code = flask_api.status.HTTP_500_INTERNAL_SERVER_ERROR
