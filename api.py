@@ -5,10 +5,10 @@ This is the API entrypoint with all afferent routes
 import logging
 import traceback
 import cProfile
-import re        # used by cProfile.run
+import re  # used by cProfile.run
 
 import flask_api.status
-from flask import Flask, jsonify, render_template
+from flask import Flask, request, render_template
 from flasgger import Swagger
 from flask_cors import CORS
 
@@ -24,7 +24,10 @@ from modules.SearchAlgorithms import SearchAlgorithmFactory
 app = Flask(__name__)
 CORS(app)
 
-Swagger(app, template=Utilities.get_json_from_file('documentation/swagger.json'))
+Swagger(app,
+        template=Utilities.get_json_from_file('documentation/swagger.json'))
+
+
 # cProfile.run('re.compile("foo|bar")')
 
 
@@ -45,14 +48,18 @@ Utilities.initiate_logging()
 ####################
 
 
-@app.route('/scraper/<path:url>/<algorithm>', methods=['GET'])
-def index(url: str, algorithm: str):
+@app.route('/api/v1.0/scraper', methods=['POST'])
+def index():
     try:
+        args = request.args
+
         price_schema = PriceScraper(SearchAlgorithmFactory()).scrape(
-            scrape_url=url, scrape_algorithm=algorithm
+            scrape_url=args.get('search_url'),
+            scrape_algorithm=args.get('search_algorithm')
         )
     except BaseException as Ex:
         message = str(Ex)
+        http_code = flask_api.status.HTTP_500_INTERNAL_SERVER_ERROR
 
         Utilities.log(
             message + str(traceback.format_exc(3)),
@@ -61,7 +68,7 @@ def index(url: str, algorithm: str):
 
         return ApiResponseGenerator().generate(
             ScrapedPriceSchema(),
-            flask_api.status.HTTP_500_INTERNAL_SERVER_ERROR,
+            http_code,
             message
         )
 

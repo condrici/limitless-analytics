@@ -6,3 +6,4 @@ flask_cors
 flasgger
 marshmallow-jsonapi
 coverage
+werkzeug==2.3.0

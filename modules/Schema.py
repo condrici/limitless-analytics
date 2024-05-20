@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from marshmallow_jsonapi import Schema, fields
+from flask import jsonify
 
 
 class ApiResponseGenerator:
@@ -8,7 +9,7 @@ class ApiResponseGenerator:
         schema = schema.dump(schema)
         schema['message'] = message
 
-        return schema, status_code
+        return jsonify(schema), status_code
 
 
 class ScrapedPriceSchema(Schema):
